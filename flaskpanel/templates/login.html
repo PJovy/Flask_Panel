@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="row">
+    <div class="content-section col-sm-6 col-md-6 col-lg-4 ml-auto mr-auto">
+      <form action="" id="form-register" method="POST">
+        <fieldset>
+          {{ form.hidden_tag() }}
+          <legend class="border-bottom">Login FlaskPanel</legend>
+
+          <div class="form-group">
+            <label for="InputEmail1">{{ form.email.label }}</label>
+            {% if form.email.errors %}
+              {% for error in form.email.errors %}
+                {{ form.email(class="form-control is-invalid", id="InputEmail1") }}
+                <div class="invalid-feedback">
+                  <small style="color:red">{{ error }}</small>
+                </div>
+              {% endfor %}
+            {% else %}
+              {{ form.email(class="form-control", id="InputEmail1") }}
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="InputPassword1">{{ form.password.label }}</label>
+
+            {% if form.password.errors %}
+              {% for error in form.password.errors %}
+
+                {{ form.password(class="form-control is-invalid", id="InputPassword1") }}
+                <div class="invalid-feedback">
+                  <small style="color:red">{{ error }}</small>
+                </div>
+              {% endfor %}
+            {% else %}
+              {{ form.password(class="form-control", id="InputPassword1") }}
+            {% endif %}
+
+          </div>
+          <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

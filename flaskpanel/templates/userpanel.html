@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+  <div class="container">
+    <ul class="nav nav-pills nav-stacked" role="tablist">
+      <li><a class="nav-link active" href="#">User's Home</a></li>
+      <li><a class="nav-link" href="#">Details</a></li>
+    </ul>
+
+    <div class="col-md-8">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>username</th>
+          <th>email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td scope="row">{{ current_user.id }}</td>
+          <td>{{ current_user.username }}</td>
+          <td>{{ current_user.email }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+{% endblock %}
