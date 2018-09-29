@@ -1,10 +1,8 @@
 import time
 from datetime import datetime
 from datetime import timedelta
-
 import jwt
 from flask import current_app
-
 from flaskpanel import db, login_manager
 from flask_login import UserMixin
 
@@ -42,9 +40,6 @@ class User(db.Model, UserMixin):
         except:
             return None
         return User.query.get(user_id)
-
-
-
 
     def generate_token(self, seconds=300):
         user_dict = {"user_id": self.id, "exp": datetime.utcnow() + timedelta(seconds=seconds)}
