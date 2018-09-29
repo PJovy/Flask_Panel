@@ -26,5 +26,5 @@ class ResetPasswordForm(FlaskForm):
 class VerifyResetPasswordForm(FlaskForm):
     password = PasswordField(label='new_password', validators=[DataRequired()])
     confirm_password = PasswordField(label='confirm_new_password', validators=[DataRequired(), EqualTo('password')])
-    verify_code = StringField(label='Code', validators=[DataRequired()])
+    # verify_code = StringField(label='Code', validators=[DataRequired()])
     submit = SubmitField(label='submit')

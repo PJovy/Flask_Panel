@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, current_app
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskpanel import app, db, bcrypt
 from flaskpanel.forms import RegistrationForm, LoginForm, ResetPasswordForm, VerifyResetPasswordForm
@@ -72,43 +72,69 @@ def reset_password():
     if form.validate_on_submit():
         email = form.email.data
         user = User.query.filter_by(email=email).first()
+        # generate JWT for the user who want to reset password
         if user:
-            vcode = generate_vcode()
-            resetpassword = ResetPassword(user_id=user.id, verify_code=vcode)
-            thr = Thread(target=send_mail, args=[app, user, vcode])
-            thr.start()
-            db.session.add(resetpassword)
-            db.session.commit()
-            # Generate verify code and store into tabel:ResetPassword
-            return redirect(url_for('verify_reset_password'))
-        flash('Your email address has not been logged!', 'warning')
+            token = user.generate_token()
+            msg = Message(subject='Reset Password', recipients=[email], sender=current_app.config['MAIL_USERNAME'])
+            msg.html = f"""
+                <h1>You can click the url bellow to confirm your resetpassword request.</h1>
+                <a href="{url_for('verify_reset_password', token=token, _external=True )}">点击该链接</a>
+            """
+            mail.send(msg)
+            flash('We have sent a email to your email address', 'success')
+            return redirect(url_for('home'))
+        flash('Your email has not been logged.', 'warning')
+        return redirect(url_for('reset_password'))
+        # if user:
+        #     vcode = generate_vcode()
+        #     resetpassword = ResetPassword(user_id=user.id, verify_code=vcode)
+        #     thr = Thread(target=send_mail, args=[app, user, vcode])
+        #     thr.start()
+        #     db.session.add(resetpassword)
+        #     db.session.commit()
+        #     # Generate verify code and store into tabel:ResetPassword
+        #     return redirect(url_for('verify_reset_password'))
+        # flash('Your email address has not been logged!', 'warning')
     # send recaptcha code to this email address,them redirect to verify page.
     return render_template('reset_password.html', form=form)
 
 
-@app.route('/verify_reset_password', methods=['GET', 'POST'])
-def verify_reset_password():
+@app.route('/verify_reset_password/<token>', methods=['GET', 'POST'])
+def verify_reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    user = User.verify_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('reset_password'))
     form = VerifyResetPasswordForm()
     if form.validate_on_submit():
         new_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        vcode = form.verify_code.data
-        t = int(time.time())
-        resetpassword = ResetPassword.query.filter_by(verify_code=vcode).first()
-        if resetpassword:
-            if t - resetpassword.generate_time <= 300:
-                resetpassword.user.password = new_password
-                db.session.commit()
-                flash('Your password has been updated.', 'success')
-                #删除数据库验证码
-                return redirect(url_for('login'))
-                db.session.delete(resetpassword)
-                db.session.commit()
-            flash('Your Vcode is expired.', 'warning')
-            return redirect(url_for('reset_password'))
-            db.session.delete(resetpassword)
-            db.session.commit()
-        flash('Your Vcode is invalid.', 'warning')
-        return redirect(url_for('reset_password'))
-        db.session.delete(resetpassword)
+        user.password = new_password
         db.session.commit()
+        flash('Your password has been update! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    # form = VerifyResetPasswordForm()
+    # if form.validate_on_submit():
+    #     new_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+    #     vcode = form.verify_code.data
+    #     t = int(time.time())
+    #     resetpassword = ResetPassword.query.filter_by(verify_code=vcode).first()
+    #     if resetpassword:
+    #         if t - resetpassword.generate_time <= 300:
+    #             resetpassword.user.password = new_password
+    #             db.session.commit()
+    #             flash('Your password has been updated.', 'success')
+    #             #删除数据库验证码
+    #             return redirect(url_for('login'))
+    #             db.session.delete(resetpassword)
+    #             db.session.commit()
+    #         flash('Your Vcode is expired.', 'warning')
+    #         return redirect(url_for('reset_password'))
+    #         db.session.delete(resetpassword)
+    #         db.session.commit()
+    #     flash('Your Vcode is invalid.', 'warning')
+    #     return redirect(url_for('reset_password'))
+    #     db.session.delete(resetpassword)
+    #     db.session.commit()
     return render_template('verify_reset_password.html', form=form)
