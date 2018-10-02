@@ -1,29 +1,37 @@
 {% extends 'layout.html' %}
 {% block content %}
 
+
   <div class="container">
     <ul class="nav nav-pills nav-stacked" role="tablist">
-      <li><a class="nav-link active" href="#">User's Home</a></li>
+      <li><a class="nav-link active" href="#">Post List</a></li>
       <li><a class="nav-link" href="{{ url_for('post_new') }}">New Post</a></li>
     </ul>
 
     <div class="col-md-8">
-      <table class="table">
-        <thead>
-        <tr>
-          <th>id</th>
-          <th>username</th>
-          <th>email</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td scope="row">{{ current_user.id }}</td>
-          <td>{{ current_user.username }}</td>
-          <td>{{ current_user.email }}</td>
-        </tr>
-        </tbody>
-      </table>
+      {% if posts %}
+        <table class="table">
+          <thead>
+          <tr>
+            <th>post_id</th>
+            <th>title</th>
+            <th>author</th>
+            <th>post_date</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for post in posts %}
+            <tr>
+              <td>{{ post.id }}</td>
+              <td>{{ post.title }}</td>
+              <td>{{ post.owner.username }}</td>
+              <td>{{ post.date_post }}</td>
+            </tr>
+          {% endfor %}
+
+          </tbody>
+        </table>
+      {% endif %}
     </div>
   </div>
 

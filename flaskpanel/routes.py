@@ -2,8 +2,8 @@ from flask import render_template, url_for, flash, redirect, request, current_ap
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 from flaskpanel import app, db, bcrypt, mail
-from flaskpanel.forms import RegistrationForm, LoginForm, ResetPasswordForm, VerifyResetPasswordForm, PostNew, \
-    PostUpdate
+from flaskpanel.forms import RegistrationForm, LoginForm, ResetPasswordForm, \
+    VerifyResetPasswordForm, PostNew, PostUpdate
 from flaskpanel.models import User, Post
 
 
@@ -56,7 +56,8 @@ def login():
 @app.route('/userpanel/<username>')
 @login_required
 def userpanel(username):
-    return render_template('userpanel.html', username=username)
+    posts = Post.query.all()
+    return render_template('userpanel.html', posts=posts, username=username, active='list')
 
 
 @app.route('/logout')
@@ -113,17 +114,16 @@ def post_new():
     form = PostNew()
     if form.validate_on_submit():
         title = form.title.data
-        author = form.author.data
         content = form.content.data
-        post = Post(title=title, author=author, content=content)
+        post = Post(title=title, content=content, owner=current_user)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been added!', 'success')
         return redirect('home')
-    return render_template('post_new.html', form=form)
+    return render_template('post_new.html', form=form, active='new')
 
 
-@app.route('/post/<post_id>')
+@app.route('/post/<int:post_id>')
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('post.html', post=post)
@@ -146,14 +146,11 @@ def post_update(post_id):
     form = PostUpdate()
     if form.validate_on_submit():
         post.title = form.title.data
-        post.author = form.author.data
         post.content = form.content.data
         db.session.commit()
         flash('Your post has been updated.', ' success')
         return redirect(url_for('post', post_id=post.id))
-    elif request.method == 'GET':
-        form.title.data = post.title
-        form.author.data = post.author
-        form.content.data = post.content
+    form.title.data = post.title
+    form.content.data = post.content
     return render_template('post_update.html', form=form)
 

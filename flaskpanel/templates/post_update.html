@@ -23,23 +23,6 @@
           </div>
 
           <div class="form-group">
-            <label for="InputAuthor">{{ form.author.label }}</label>
-
-            {% if form.author.errors %}
-              {% for error in form.author.errors %}
-
-                {{ form.author(class="form-control is-invalid", id="InputAuthor") }}
-                <div class="invalid-feedback">
-                  <small style="color:red">{{ error }}</small>
-                </div>
-              {% endfor %}
-            {% else %}
-              {{ form.author(class="form-control", id="InputAuthor") }}
-            {% endif %}
-
-          </div>
-
-          <div class="form-group">
             <label for="InputContent">{{ form.content.label }}</label>
 
             {% if form.content.errors %}

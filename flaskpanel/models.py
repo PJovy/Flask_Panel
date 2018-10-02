@@ -1,4 +1,3 @@
-import time
 from datetime import datetime
 from datetime import timedelta
 import jwt
@@ -18,7 +17,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     date_registered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
+    posts = db.relationship('Post', backref='owner', lazy='dynamic')
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.date_registered}')"
@@ -48,9 +47,8 @@ class User(db.Model, UserMixin):
 
 
 class Post(db.Model):
-    __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
-    author = db.Column(db.String(20), nullable=False)
     content = db.Column(db.Text(), nullable=False)
-    date_post = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_post = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

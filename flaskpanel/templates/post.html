@@ -9,7 +9,7 @@
   {% endif %}
     <article>
       <h3 class="text-center">{{ post.title }}</h3>
-      <p class="text-right mb-0">author: {{ post.author }}</p>
+      <p class="text-right mb-0">author: {{ post.owner.username }}</p>
       <p class="text-right">post date：{{ post.date_post.date() }}</p>
       <p class="text-justify pl-5" style="font-size: 30px">{{ post.content[:50] }}</p>
     </article>

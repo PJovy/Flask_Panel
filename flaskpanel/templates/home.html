@@ -1,15 +1,16 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
-  {% for post in posts %}
-    <div class="col-md-10 border rounded center-block col-md-8 mb-1 mt-1">
-      <article>
-        <a href="{{ url_for('post', post_id=post.id) }}"><h3 class="text-center">{{ post.title }}</h3></a>
-        <p class="text-right mb-0">author: {{ post.author }}</p>
-        <p class="text-right">post date：{{ post.date_post.date() }}</p>
-        <p class="text-justify pl-5" style="font-size: 30px">{{ post.content[:50] }}</p>
-      </article>
-    </div>
-  {% endfor %}
+  {% if posts %}
+    {% for post in posts %}
+      <div class="col-md-10 border rounded center-block col-md-8 mb-1 mt-1">
+        <article>
+          <a href="{{ url_for('post', post_id=post.id) }}"><h3 class="text-center">{{ post.title }}</h3></a>
+          <p class="text-right mb-0">author: {{ post.owner.username }}</p>
+          <p class="text-right">post date：{{ post.date_post.date() }}</p>
+          <p class="text-justify pl-5" style="font-size: 30px">{{ post.content[:50] }}</p>
+        </article>
+      </div>
+    {% endfor %}
+  {% endif %}
 {% endblock %}

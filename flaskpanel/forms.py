@@ -31,13 +31,11 @@ class VerifyResetPasswordForm(FlaskForm):
 
 class PostNew(FlaskForm):
     title = StringField(label='title', validators=[DataRequired()])
-    author = StringField(label='author', validators=[DataRequired()])
     content = TextAreaField(label='content', validators=[DataRequired()])
     submit = SubmitField(label='submit')
 
 
 class PostUpdate(FlaskForm):
     title = StringField(label='title', validators=[DataRequired()])
-    author = StringField(label='author', validators=[DataRequired()])
     content = TextAreaField(label='content', validators=[DataRequired()])
     submit = SubmitField(label='Update')
