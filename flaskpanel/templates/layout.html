@@ -23,15 +23,15 @@
     <a class="navbar-brand mr-4" href="/">Flask Panel</a>
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse-01"></button>
     <div class="collapse navbar-collapse" id="navbar-collapse-01">
-      <ul class="nav navbar-nav ml-auto mr-2">
-        {% if current_user.is_authenticated %}
-          <li><a class="nav-item nav-link mr-2" href="{{ url_for('logout') }}">Logout</a></li>
-          <li><a class="nav-item nav-link" href="{{ url_for('userpanel', username=current_user.username) }}">{{ current_user.username }}</a></li>
-        {% else %}
-          <li><a class="nav-item nav-link mr-2" href="{{ url_for('login') }}">Login</a></li>
-          <li><a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a></li>
-        {% endif %}
-      </ul>
+{#      <ul class="nav navbar-nav ml-auto mr-2">#}
+{#        {% if current_user.is_authenticated %}#}
+{#          <li><a class="nav-item nav-link mr-2" href="{{ url_for('logout') }}">Logout</a></li>#}
+{#          <li><a class="nav-item nav-link" href="{{ url_for('userpanel', username=current_user.username) }}">{{ current_user.username }}</a></li>#}
+{#        {% else %}#}
+{#          <li><a class="nav-item nav-link mr-2" href="{{ url_for('login') }}">Login</a></li>#}
+{#          <li><a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a></li>#}
+{#        {% endif %}#}
+{#      </ul>#}
     </div>
   </nav>
 </header>
