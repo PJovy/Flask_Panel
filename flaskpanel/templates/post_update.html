@@ -34,7 +34,7 @@
                 </div>
               {% endfor %}
             {% else %}
-              {{ form.content(class="form-control", id="InputContent") }}
+              {{ form.content(class="ckeditor form-control", id="InputContent") }}
             {% endif %}
 
           </div>
@@ -45,4 +45,8 @@
       </form>
     </div>
   </div>
+{% endblock %}
+{% block script %}
+  {{ super() }}
+  <script src="//cdn.ckeditor.com/4.5.11/standard/ckeditor.js"></script>
 {% endblock %}
