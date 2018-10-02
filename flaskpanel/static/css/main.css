@@ -6,9 +6,8 @@
     box-shadow: inset 0px 0px 3px 0px black;
 }
 
-.post {
+.content-section {
     background: #ffffff;
-    /*background: #444444;*/
     padding: 10px 20px;
     border: 1px solid #dddddd;
     border-radius: 5px;

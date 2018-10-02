@@ -2,12 +2,12 @@
 {% block content %}
 
 
-  <div class="col-md-10 border rounded center-block col-md-8 mb-1 mt-1">
+  <div class="col-md-10 center-block col-md-8 mb-1 mt-1">
   {% if current_user.is_authenticated %}
-    <a type="submit" class="btn btn-danger" href="{{ url_for('post_delete', post_id=post.id) }}">Delete</a>
-    <a type="submit" class="btn btn-primary" href="{{ url_for('post_update', post_id=post.id) }}">Update</a>
+    <a type="submit" class="btn btn-sm btn-danger" href="{{ url_for('post_delete', post_id=post.id) }}">Delete</a>
+    <a type="submit" class="btn btn-sm btn-primary" href="{{ url_for('post_update', post_id=post.id) }}">Update</a>
   {% endif %}
-    <article>
+    <article class="content-section">
       <h3 class="text-center">{{ post.title }}</h3>
       <p class="text-right mb-0">author: {{ post.owner.username }}</p>
       <p class="text-right">post date：{{ post.date_post.date() }}</p><br>
