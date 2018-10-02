@@ -1,14 +1,18 @@
 from flask import render_template, url_for, flash, redirect, request, current_app
 from flask_login import login_user, current_user, logout_user, login_required
-from flaskpanel import app, db, bcrypt
-from flaskpanel.forms import RegistrationForm, LoginForm, ResetPasswordForm, VerifyResetPasswordForm
-from flaskpanel.models import User
+from flask_mail import Message
+from flaskpanel import app, db, bcrypt, mail
+from flaskpanel.forms import RegistrationForm, LoginForm, ResetPasswordForm, VerifyResetPasswordForm, PostNew, \
+    PostUpdate
+from flaskpanel.models import User, Post
 
 
 @app.route('/home')
 @app.route('/')
 def home():
-    return render_template('home.html')
+    posts = Post.query.order_by(Post.date_post.desc()).all()
+    print(posts)
+    return render_template('home.html', posts=posts)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -101,3 +105,55 @@ def verify_reset_password(token):
         flash('Your password has been update! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('verify_reset_password.html', form=form)
+
+
+@app.route('/post_new', methods=['POST', 'GET'])
+@login_required
+def post_new():
+    form = PostNew()
+    if form.validate_on_submit():
+        title = form.title.data
+        author = form.author.data
+        content = form.content.data
+        post = Post(title=title, author=author, content=content)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post has been added!', 'success')
+        return redirect('home')
+    return render_template('post_new.html', form=form)
+
+
+@app.route('/post/<post_id>')
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', post=post)
+
+
+@app.route('/post/<int:post_id>/post_delete')
+@login_required
+def post_delete(post_id):
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    flash('This post has been deleted.', 'info')
+    return redirect(url_for('home'))
+
+
+@app.route('/post/<int:post_id>/post_update', methods=['GET', 'POST'])
+@login_required
+def post_update(post_id):
+    post = Post.query.get_or_404(post_id)
+    form = PostUpdate()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.author = form.author.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('Your post has been updated.', ' success')
+        return redirect(url_for('post', post_id=post.id))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.author.data = post.author
+        form.content.data = post.content
+    return render_template('post_update.html', form=form)
+

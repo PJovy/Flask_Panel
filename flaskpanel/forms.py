@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 
@@ -27,3 +27,17 @@ class VerifyResetPasswordForm(FlaskForm):
     password = PasswordField(label='new_password', validators=[DataRequired()])
     confirm_password = PasswordField(label='confirm_new_password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField(label='submit')
+
+
+class PostNew(FlaskForm):
+    title = StringField(label='title', validators=[DataRequired()])
+    author = StringField(label='author', validators=[DataRequired()])
+    content = TextAreaField(label='content', validators=[DataRequired()])
+    submit = SubmitField(label='submit')
+
+
+class PostUpdate(FlaskForm):
+    title = StringField(label='title', validators=[DataRequired()])
+    author = StringField(label='author', validators=[DataRequired()])
+    content = TextAreaField(label='content', validators=[DataRequired()])
+    submit = SubmitField(label='Update')

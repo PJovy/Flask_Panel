@@ -1,13 +1,15 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <div class="jumbotron">
-    <h1>注册</h1>
-    <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work.
-      It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-    <p>To see the difference between static and fixed top navbars, just scroll.</p>
-    <p>
-      <a class="btn btn-lg btn-primary" href="{{ url_for('register') }}" role="button">注册 &raquo;</a>
-    </p>
-  </div>
+
+  {% for post in posts %}
+    <div class="col-md-10 border rounded center-block col-md-8 mb-1 mt-1">
+      <article>
+        <a href="{{ url_for('post', post_id=post.id) }}"><h3 class="text-center">{{ post.title }}</h3></a>
+        <p class="text-right mb-0">author: {{ post.author }}</p>
+        <p class="text-right">post date：{{ post.date_post.date() }}</p>
+        <p class="text-justify pl-5" style="font-size: 30px">{{ post.content[:50] }}</p>
+      </article>
+    </div>
+  {% endfor %}
 {% endblock %}

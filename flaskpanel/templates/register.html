@@ -30,7 +30,7 @@
               {% for error in form.email.errors %}
 
                 {{ form.email(class="form-control is-invalid", id="InputEmail1") }}
-                 <div class="invalid-feedback">
+                <div class="invalid-feedback">
                   <small style="color:red">{{ error }}</small>
                 </div>
               {% endfor %}
@@ -62,7 +62,7 @@
               {% for error in form.confirm_password.errors %}
 
                 {{ form.confirm_password(class="form-control is-invalid", id="InputConfirmPassword1") }}
-                 <div class="invalid-feedback">
+                <div class="invalid-feedback">
                   <small style="color:red">{{ error }}</small>
                 </div>
               {% endfor %}
@@ -71,7 +71,8 @@
             {% endif %}
           </div>
           <div class="form-group">
-            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit(class="btn btn-primary") }}<br>
+            <small><a href="{{ url_for('login') }}">Already have account ? Click to login</a></small>
           </div>
         </fieldset>
       </form>

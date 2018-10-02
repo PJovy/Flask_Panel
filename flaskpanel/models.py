@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     date_registered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    v_code = db.relationship('ResetPassword', backref='user', lazy='dynamic')
+
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.date_registered}')"
@@ -47,9 +47,10 @@ class User(db.Model, UserMixin):
         return user_token.decode('utf-8')
 
 
-class ResetPassword(db.Model):
-    __tablename__ = 'resetpassword'
+class Post(db.Model):
+    __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    verify_code = db.Column(db.String(10), nullable=True, default=None)
-    generate_time = db.Column(db.Integer, nullable=True, default=int(time.time()))
+    title = db.Column(db.String(50), nullable=False)
+    author = db.Column(db.String(20), nullable=False)
+    content = db.Column(db.Text(), nullable=False)
+    date_post = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
