@@ -8,9 +8,9 @@
           <a href="{{ url_for('post', post_id=post.id) }}"><h3 class="text-center">{{ post.title }}</h3></a>
           <p class="text-right mb-0">author: {{ post.owner.username }}</p>
           <p class="text-right">post date：{{ post.date_post.date() }}</p>
-          <div class="border-top border-bottom border-dark">
-            {{ post.content[:500] |safe }}
-          </div>
+{#          <div class="border-top border-bottom border-dark">#}
+{#            {{ post.content[:500] |safe }}#}
+{#          </div>#}
         </article>
       </div>
     {% endfor %}
